@@ -5,6 +5,7 @@
 ## Dev dependencies
 
 - [Nest](https://github.com/nestjs/nest)
+- [PostgreSQL](https://www.postgresql.org/)
 
 ## Project setup
 
