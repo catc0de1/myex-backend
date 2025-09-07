@@ -10,7 +10,7 @@ export class UsersService {
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
 
-  findAll(filters: FindUserDto) {
+  findAll(filters: FindUserDto): Promise<User[]> {
     return this.usersRepository.find({
       where: filters,
     });
@@ -21,7 +21,7 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<User> {
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -30,14 +30,14 @@ export class UsersService {
     return user;
   }
 
-  async update(id: number, attrs: Partial<User>) {
+  async update(id: number, attrs: Partial<User>): Promise<User> {
     const user = await this.findOne(id);
 
     Object.assign(user, attrs);
     return this.usersRepository.save(user);
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<User> {
     const user = await this.findOne(id);
 
     return this.usersRepository.remove(user);
