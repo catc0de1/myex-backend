@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { FindUserDto } from './dtos/find-user.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -9,11 +10,9 @@ export class UsersService {
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
 
-  findAll(name: string) {
+  findAll(filters: FindUserDto) {
     return this.usersRepository.find({
-      where: {
-        name,
-      },
+      where: filters,
     });
   }
 
