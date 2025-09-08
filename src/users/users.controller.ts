@@ -19,10 +19,10 @@ import { Serialize } from '../interceptors/serialize.interceptor';
 import type { User } from './user.entity';
 
 @Controller('users')
+@Serialize(UserDto)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Serialize(UserDto)
   @Get()
   findAllUsers(@Query() query: FindUserDto): Promise<User[]> {
     return this.usersService.findAll(query);
@@ -33,8 +33,7 @@ export class UsersController {
     return this.usersService.create(body.name, body.email, body.password);
   }
 
-  // @UseInterceptors(new SerializeInterceptor(UserDto))
-  @Serialize(UserDto)
+  // @Serialize(UserDto) // Method level interceptor (overrides class level)
   @Get('/:id')
   findUser(@Param('id', ParseIntPipe) id: number): Promise<User> {
     // console.log('Handler is running');
