@@ -8,20 +8,21 @@ import {
   Patch,
   Delete,
   ParseIntPipe,
-  UseInterceptors,
+  // UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { FindUserDto } from './dtos/find-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { UserDto } from './dtos/user.dto';
 import { UsersService } from './users.service';
-import { SerializeInterceptor } from '../interceptors/serialize.interceptor';
+import { Serialize } from '../interceptors/serialize.interceptor';
 import type { User } from './user.entity';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @UseInterceptors(SerializeInterceptor)
+  @Serialize(UserDto)
   @Get()
   findAllUsers(@Query() query: FindUserDto): Promise<User[]> {
     return this.usersService.findAll(query);
@@ -32,7 +33,8 @@ export class UsersController {
     return this.usersService.create(body.name, body.email, body.password);
   }
 
-  @UseInterceptors(SerializeInterceptor)
+  // @UseInterceptors(new SerializeInterceptor(UserDto))
+  @Serialize(UserDto)
   @Get('/:id')
   findUser(@Param('id', ParseIntPipe) id: number): Promise<User> {
     // console.log('Handler is running');
