@@ -18,6 +18,7 @@ import { UsersService } from './users.service';
 import { AuthService } from './auth/auth.service';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import type { User } from './user.entity';
+import { LoginUserDto } from './dtos/login-user.dto';
 
 @Controller('users')
 @Serialize(UserDto)
@@ -61,5 +62,10 @@ export class UsersController {
   @Post('/register')
   register(@Body() body: CreateUserDto) {
     return this.authService.register(body.name, body.email, body.password);
+  }
+
+  @Post('/login')
+  login(@Body() body: LoginUserDto) {
+    return this.authService.login(body.email, body.password);
   }
 }
