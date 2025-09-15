@@ -15,13 +15,17 @@ import { FindUserDto } from './dtos/find-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
 import { UsersService } from './users.service';
+import { AuthService } from './auth/auth.service';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import type { User } from './user.entity';
 
 @Controller('users')
 @Serialize(UserDto)
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private authService: AuthService,
+  ) {}
 
   @Get()
   findAllUsers(@Query() query: FindUserDto): Promise<User[]> {
@@ -52,5 +56,10 @@ export class UsersController {
   @Delete('/:id')
   removeUser(@Param('id', ParseIntPipe) id: number): Promise<User> {
     return this.usersService.remove(id);
+  }
+
+  @Post('/register')
+  register(@Body() body: CreateUserDto) {
+    return this.authService.register(body.name, body.email, body.password);
   }
 }
