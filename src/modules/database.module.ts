@@ -16,7 +16,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         database: configService.get<string>('DB_NAME'),
         // entities: [User, Item], // specify entities here or use autoLoadEntities to load all entities automatically
         autoLoadEntities: true,
-        logging: true,
+        logging: false,
         synchronize: true, // never use TRUE in production!
       }),
     }),
