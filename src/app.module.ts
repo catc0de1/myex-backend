@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ItemsModule } from './items/items.module';
+import { RedisModule } from './modules/redis.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ItemsModule } from './items/items.module';
         synchronize: true, // never use TRUE in production!
       }),
     }),
+    RedisModule,
     UsersModule,
     ItemsModule,
   ],
