@@ -3,12 +3,20 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as argon2 from 'argon2';
 import { UsersService } from '../users.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  private pepper: string;
+
+  constructor(
+    private usersService: UsersService,
+    private configService: ConfigService,
+  ) {
+    this.pepper = this.configService.get<string>('PEPPER_SECRET') || 'fallback-temp';
+  }
 
   async register(name: string, email: string, password: string) {
     const users = await this.usersService.findAll({ email });
@@ -16,7 +24,7 @@ export class AuthService {
       throw new BadRequestException('Email sudah terdaftar');
     }
 
-    const hashedPassword = await argon2.hash(password);
+    const hashedPassword = await argon2.hash(password + this.pepper);
 
     const user = await this.usersService.create(name, email, hashedPassword);
 
@@ -29,7 +37,7 @@ export class AuthService {
       throw new NotFoundException('Email tidak ditemukan');
     }
 
-    const isMatch = await argon2.verify(user.password, password);
+    const isMatch = await argon2.verify(user.password, password + this.pepper);
     if (!isMatch) {
       throw new BadRequestException('Password salah');
     }
