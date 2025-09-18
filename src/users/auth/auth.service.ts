@@ -3,12 +3,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { randomBytes, scrypt as _scrypt } from 'crypto';
-import { promisify } from 'util';
+import * as argon2 from 'argon2';
 import { UsersService } from '../users.service';
-// import { CreateUserDto } from '../dtos/create-user.dto';
-
-const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class AuthService {
@@ -20,9 +16,7 @@ export class AuthService {
       throw new BadRequestException('Email sudah terdaftar');
     }
 
-    const salt = randomBytes(8).toString('hex');
-    const hash = (await scrypt(password, salt, 64)) as Buffer;
-    const hashedPassword = salt + '.' + hash.toString('hex');
+    const hashedPassword = await argon2.hash(password);
 
     const user = await this.usersService.create(name, email, hashedPassword);
 
@@ -35,9 +29,8 @@ export class AuthService {
       throw new NotFoundException('Email tidak ditemukan');
     }
 
-    const [salt, storedHash] = user.password.split('.');
-    const hash = (await scrypt(password, salt, 64)) as Buffer;
-    if (storedHash !== hash.toString('hex')) {
+    const isMatch = await argon2.verify(user.password, password);
+    if (!isMatch) {
       throw new BadRequestException('Password salah');
     }
 
