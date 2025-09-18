@@ -9,13 +9,13 @@ import { UsersService } from '../users.service';
 
 @Injectable()
 export class AuthService {
-  private pepper: string;
+  private readonly pepper: string;
 
   constructor(
     private usersService: UsersService,
     private configService: ConfigService,
   ) {
-    this.pepper = this.configService.get<string>('PEPPER_SECRET') || 'fallback-temp';
+    this.pepper = this.configService.get<string>('PEPPER_SECRET')!;
   }
 
   async register(name: string, email: string, password: string) {
