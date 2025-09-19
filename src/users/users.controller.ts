@@ -9,18 +9,21 @@ import {
   Delete,
   ParseIntPipe,
   Req,
+  Res,
   // UseInterceptors,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { FindUserDto } from './dtos/find-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
+import { LoginUserDto } from './dtos/login-user.dto';
+import { AuthResponseDto } from './dtos/auth-response.dto';
 import { UsersService } from './users.service';
 import { AuthService } from './auth/auth.service';
 import { Serialize } from '../interceptors/serialize.interceptor';
+import type { Request, Response } from 'express';
 import type { User } from './user.entity';
-import { LoginUserDto } from './dtos/login-user.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Controller('users')
 @Serialize(UserDto)
@@ -38,18 +41,6 @@ export class UsersController {
   @Post()
   createUser(@Body() body: CreateUserDto): Promise<User> {
     return this.usersService.create(body.name, body.email, body.password);
-  }
-
-  @Get('/session')
-  testSession(@Req() req: Request) {
-    console.log('sessionID:', req.sessionID, 'session:', req.session);
-    if (req.session.views) {
-      req.session.views++;
-    } else {
-      req.session.views = 1;
-    }
-
-    return { views: req.session.views };
   }
 
   // @Serialize(UserDto) // Method level interceptor (overrides class level)
@@ -74,12 +65,46 @@ export class UsersController {
   }
 
   @Post('/register')
-  register(@Body() body: CreateUserDto) {
-    return this.authService.register(body.name, body.email, body.password);
+  @Serialize(AuthResponseDto)
+  async register(@Body() body: CreateUserDto, @Req() req: Request) {
+    const user = await this.authService.register(
+      body.name,
+      body.email,
+      body.password,
+    );
+
+    req.session.userId = user.id;
+    // console.log(req.session.userId);
+
+    return { message: 'Register successfully', user };
   }
 
   @Post('/login')
-  login(@Body() body: LoginUserDto) {
-    return this.authService.login(body.email, body.password);
+  @Serialize(AuthResponseDto)
+  async login(@Body() body: LoginUserDto, @Req() req: Request) {
+    const user = await this.authService.login(body.email, body.password);
+
+    req.session.userId = user.id;
+    // console.log(req.session.userId);
+
+    return {
+      message: 'Login successfully',
+      user: plainToInstance(UserDto, user),
+    };
+  }
+
+  @Post('/logout')
+  logout(@Req() req: Request, @Res() res: Response) {
+    // console.log('logout sessionID:', req.sessionID);
+    // console.log('logout session:', req.session);
+
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ message: 'Logout failed' });
+      }
+      res.clearCookie('connect.sid');
+
+      return res.json({ message: 'Logout successfully' });
+    });
   }
 }
