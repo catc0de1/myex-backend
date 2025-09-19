@@ -8,8 +8,10 @@ import {
   Patch,
   Delete,
   ParseIntPipe,
+  Req,
   // UseInterceptors,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { FindUserDto } from './dtos/find-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -36,6 +38,18 @@ export class UsersController {
   @Post()
   createUser(@Body() body: CreateUserDto): Promise<User> {
     return this.usersService.create(body.name, body.email, body.password);
+  }
+
+  @Get('/session')
+  testSession(@Req() req: Request) {
+    console.log('sessionID:', req.sessionID, 'session:', req.session);
+    if (req.session.views) {
+      req.session.views++;
+    } else {
+      req.session.views = 1;
+    }
+
+    return { views: req.session.views };
   }
 
   // @Serialize(UserDto) // Method level interceptor (overrides class level)

@@ -10,7 +10,10 @@ import { RedisModule as NestRedisModule } from '@liaoliaots/nestjs-redis';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         config: {
-          url: configService.get<string>('REDIS_URL'),
+          host: configService.get<string>('REDIS_HOST'),
+          port: configService.get<number>('REDIS_PORT'),
+          password: configService.get<string>('REDIS_PASSWORD'),
+          // pingInterval: 30000, // keep-alive ping, 1 per 30s
         },
       }),
     }),
