@@ -7,6 +7,7 @@ import { AppConfigModule } from './config/config.module';
 import { RedisModule } from './config/redis.module';
 import { DatabaseModule } from './config/database.module';
 import { SessionMiddleware } from './session/session.middleware';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { SessionMiddleware } from './session/session.middleware';
     RedisModule,
 
     UsersModule,
+    AuthModule,
     ItemsModule,
   ],
   controllers: [AppController],
