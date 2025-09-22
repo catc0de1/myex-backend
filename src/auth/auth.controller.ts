@@ -2,10 +2,12 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   Post,
   Req,
 } from '@nestjs/common';
 import { Serialize } from '@/interceptors/serialize.interceptor';
+import { CurrentUser } from '@/auth/decorators/current-user.decorator';
 import { AuthResponseDto } from '@/auth/dtos/auth-response.dto';
 import { CreateUserDto } from '@/users/dtos/create-user.dto';
 import { AuthService } from '@/auth/auth.service';
@@ -54,5 +56,10 @@ export class AuthController {
         resolve({ message: 'Logout successfully' });
       });
     });
+  }
+
+  @Get('whoami')
+  whoAmI(@CurrentUser() user: string) {
+    return user;
   }
 }
