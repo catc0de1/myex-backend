@@ -5,13 +5,16 @@ import {
   Get,
   Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { Serialize } from '@/interceptors/serialize.interceptor';
+import { AuthGuard } from '@/guard/auth.guard';
 import { CurrentUser } from '@/auth/decorators/current-user.decorator';
 import { AuthResponseDto } from '@/auth/dtos/auth-response.dto';
 import { CreateUserDto } from '@/users/dtos/create-user.dto';
 import { AuthService } from '@/auth/auth.service';
 import { LoginUserDto } from '@/auth/dtos/login-user.dto';
+import { User } from '@/users/user.entity';
 import type { Request } from 'express';
 
 @Controller('auth')
@@ -59,7 +62,8 @@ export class AuthController {
   }
 
   @Get('whoami')
-  whoAmI(@CurrentUser() user: string) {
+  @UseGuards(AuthGuard)
+  whoAmI(@CurrentUser() user: User) {
     return user;
   }
 }
