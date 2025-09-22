@@ -5,11 +5,11 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import { Serialize } from 'src/interceptors/serialize.interceptor';
-import { AuthResponseDto } from './dtos/auth-response.dto';
-import { CreateUserDto } from 'src/users/dtos/create-user.dto';
-import { AuthService } from './auth.service';
-import { LoginUserDto } from './dtos/login-user.dto';
+import { Serialize } from '@/interceptors/serialize.interceptor';
+import { AuthResponseDto } from '@/auth/dtos/auth-response.dto';
+import { CreateUserDto } from '@/users/dtos/create-user.dto';
+import { AuthService } from '@/auth/auth.service';
+import { LoginUserDto } from '@/auth/dtos/login-user.dto';
 import type { Request } from 'express';
 
 @Controller('auth')

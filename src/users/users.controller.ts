@@ -9,14 +9,13 @@ import {
   Delete,
   ParseIntPipe,
 } from '@nestjs/common';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { FindUserDto } from './dtos/find-user.dto';
-import { UpdateUserDto } from './dtos/update-user.dto';
-import { UserDto } from './dtos/user.dto';
-import { UsersService } from './users.service';
-import { Serialize } from '../interceptors/serialize.interceptor';
-import type { Request, Response } from 'express';
-import type { User } from './user.entity';
+import { CreateUserDto } from '@/users/dtos/create-user.dto';
+import { FindUserDto } from '@/users/dtos/find-user.dto';
+import { UpdateUserDto } from '@/users/dtos/update-user.dto';
+import { UserDto } from '@/users/dtos/user.dto';
+import { UsersService } from '@/users/users.service';
+import { Serialize } from '@/interceptors/serialize.interceptor';
+import type { User } from '@/users/user.entity';
 
 @Controller('users')
 @Serialize(UserDto)
