@@ -1,13 +1,13 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
-import { UsersModule } from '@/users/users.module';
-import { ItemsModule } from '@/items/items.module';
-import { AppConfigModule } from '@/config/config.module';
-import { RedisModule } from '@/config/redis.module';
-import { DatabaseModule } from '@/config/database.module';
-import { SessionMiddleware } from '@/session/session.middleware';
-import { AuthModule } from '@/auth/auth.module';
+import { UsersModule } from '@users/users.module';
+import { ItemsModule } from '@items/items.module';
+import { AppConfigModule } from '@config/config.module';
+import { RedisModule } from '@config/redis.module';
+import { DatabaseModule } from '@config/database.module';
+import { SessionMiddleware } from '@session/session.middleware';
+import { AuthModule } from '@auth/auth.module';
 
 @Module({
   imports: [
