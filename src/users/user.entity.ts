@@ -5,7 +5,9 @@ import {
   PrimaryGeneratedColumn,
   AfterUpdate,
   AfterRemove,
+  OneToMany,
 } from 'typeorm';
+import { Item } from '@/items/item.entity';
 
 @Entity()
 export class User {
@@ -20,6 +22,9 @@ export class User {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Item, (item) => item.user)
+  items: Item[];
 
   @AfterInsert()
   logInsert() {
