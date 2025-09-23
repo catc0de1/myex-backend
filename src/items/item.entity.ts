@@ -21,6 +21,6 @@ export class Item {
   @Column()
   category: string;
 
-  @ManyToOne(() => User, (user) => user.items)
+  @ManyToOne(() => User, (user) => user.items, { nullable: false })
   user: User;
 }
