@@ -18,19 +18,15 @@ export class ItemsService {
   }
 
   async findOne(id: number) {
-    const items = await this.itemRepository.findOne({
+    const item = await this.itemRepository.findOne({
       where: { id },
       relations: ['user'],
     });
 
-    if (!items) {
+    if (!item) {
       throw new NotFoundException('Item not found!');
     }
 
-    return {
-      id: items.id,
-      name: items.name,
-      owner: items.user.name,
-    };
+    return item;
   }
 }

@@ -13,6 +13,8 @@ import { Item } from '@items/item.entity';
 import { User } from '@users/user.entity';
 import { AuthGuard } from '@guard/auth.guard';
 import { CurrentUser } from '@auth/decorators/current-user.decorator';
+import { Serialize } from '@/interceptors/serialize.interceptor';
+import { ItemDto } from './dtos/item.dto';
 
 @Controller('items')
 export class ItemsController {
@@ -28,6 +30,7 @@ export class ItemsController {
   }
 
   @Get('/:id')
+  @Serialize(ItemDto)
   findItem(@Param('id', ParseIntPipe) id: number) {
     return this.itemsService.findOne(id);
   }
