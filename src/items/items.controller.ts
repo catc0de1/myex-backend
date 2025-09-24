@@ -1,4 +1,12 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ItemsService } from '@items/items.service';
 import { CreateItemDto } from '@items/dtos/create-item.dto';
 import { Item } from '@items/item.entity';
@@ -17,5 +25,10 @@ export class ItemsController {
     @CurrentUser() user: User,
   ): Promise<Item> {
     return this.itemsService.create(body, user);
+  }
+
+  @Get('/:id')
+  findItem(@Param('id', ParseIntPipe) id: number) {
+    return this.itemsService.findOne(id);
   }
 }

@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { User } from '@users/user.entity';
+import type { Relation } from 'typeorm';
 
 @Entity()
 export class Item {
@@ -22,5 +23,5 @@ export class Item {
   category: string;
 
   @ManyToOne(() => User, (user) => user.items, { nullable: false })
-  user: User;
+  user: Relation<User>;
 }

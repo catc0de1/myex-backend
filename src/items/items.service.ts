@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Item } from '@items/item.entity';
@@ -15,5 +15,22 @@ export class ItemsService {
     const newItem = this.itemRepository.create(item);
     newItem.user = user;
     return this.itemRepository.save(newItem);
+  }
+
+  async findOne(id: number) {
+    const items = await this.itemRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    });
+
+    if (!items) {
+      throw new NotFoundException('Item not found!');
+    }
+
+    return {
+      id: items.id,
+      name: items.name,
+      owner: items.user.name,
+    };
   }
 }
