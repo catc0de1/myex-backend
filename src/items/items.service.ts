@@ -29,4 +29,14 @@ export class ItemsService {
 
     return item;
   }
+
+  async approveItem(id: number, approved: boolean) {
+    const item = await this.itemRepository.findOneBy({ id });
+    if (!item) {
+      throw new NotFoundException('Item not found!');
+    }
+
+    item.approved = approved;
+    return this.itemRepository.save(item);
+  }
 }
