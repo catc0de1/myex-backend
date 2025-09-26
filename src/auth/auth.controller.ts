@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Serialize } from '@interceptors/serialize.interceptor';
 import { AuthGuard } from '@guard/auth.guard';
-import { CurrentUser } from '@auth/decorators/current-user.decorator';
+import { CurrentSession } from '@auth/decorators/current-session.decorator';
 import { AuthResponseDto } from '@auth/dtos/auth-response.dto';
 import { CreateUserDto } from '@users/dtos/create-user.dto';
 import { AuthService } from '@auth/auth.service';
@@ -63,7 +63,7 @@ export class AuthController {
 
   @Get('whoami')
   @UseGuards(AuthGuard)
-  whoAmI(@CurrentUser() user: User) {
+  whoAmI(@CurrentSession() user: User) {
     return user;
   }
 }

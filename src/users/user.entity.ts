@@ -23,6 +23,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: false })
+  admin: boolean;
+
   @OneToMany(() => Item, (item) => item.user)
   items: Item[];
 

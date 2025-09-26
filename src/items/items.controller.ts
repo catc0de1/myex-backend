@@ -13,10 +13,11 @@ import { CreateItemDto } from '@items/dtos/create-item.dto';
 import { Item } from '@items/item.entity';
 import { User } from '@users/user.entity';
 import { AuthGuard } from '@guard/auth.guard';
-import { CurrentUser } from '@auth/decorators/current-user.decorator';
+import { CurrentSession } from '@auth/decorators/current-session.decorator';
 import { Serialize } from '@/interceptors/serialize.interceptor';
 import { ItemDto } from './dtos/item.dto';
 import { ApproveItemDto } from './dtos/approve-item.dto';
+import { AdminGuard } from '@guard/admin.guard';
 
 @Controller('items')
 export class ItemsController {
@@ -26,7 +27,7 @@ export class ItemsController {
   @UseGuards(AuthGuard)
   createItem(
     @Body() body: CreateItemDto,
-    @CurrentUser() user: User,
+    @CurrentSession() user: User,
   ): Promise<Item> {
     return this.itemsService.create(body, user);
   }
@@ -38,6 +39,7 @@ export class ItemsController {
   }
 
   @Patch('/:id')
+  @UseGuards(AdminGuard)
   approveItem(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: ApproveItemDto,
