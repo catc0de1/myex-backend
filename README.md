@@ -137,4 +137,9 @@ $ pnpm test:e2e
 
 # test coverage
 $ pnpm test:cov
+
 ```
+
+## License
+
+MyEx is [MIT Licensed](https://github.com/CatC0de1/myex-backend?tab=MIT-1-ov-file)
