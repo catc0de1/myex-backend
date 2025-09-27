@@ -4,12 +4,23 @@ import { Repository } from 'typeorm';
 import { Item } from '@items/item.entity';
 import { CreateItemDto } from '@items/dtos/create-item.dto';
 import { User } from '@users/user.entity';
+import { QueryItemDto } from './dtos/query-item.dto';
+import { applyFilter } from './query/filter.query';
 
 @Injectable()
 export class ItemsService {
   constructor(
     @InjectRepository(Item) private itemRepository: Repository<Item>,
   ) {}
+
+  findAll(filters: QueryItemDto): Promise<Item[]> {
+    let query = this.itemRepository.createQueryBuilder('item');
+
+    query.where('item.approved = :approved', { approved: true });
+    query = applyFilter(query, 'item', filters);
+
+    return query.getMany();
+  }
 
   create(item: CreateItemDto, user: User) {
     const newItem = this.itemRepository.create(item);

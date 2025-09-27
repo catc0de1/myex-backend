@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ItemsService } from '@items/items.service';
@@ -17,11 +18,18 @@ import { CurrentSession } from '@auth/decorators/current-session.decorator';
 import { Serialize } from '@/interceptors/serialize.interceptor';
 import { ItemDto } from './dtos/item.dto';
 import { ApproveItemDto } from './dtos/approve-item.dto';
+import { QueryItemDto } from './dtos/query-item.dto';
 import { AdminGuard } from '@guard/admin.guard';
 
 @Controller('items')
 export class ItemsController {
   constructor(private itemsService: ItemsService) {}
+
+  @Get()
+  @Serialize(ItemDto)
+  findAllItems(@Query() query: QueryItemDto): Promise<Item[]> {
+    return this.itemsService.findAll(query);
+  }
 
   @Post()
   @UseGuards(AuthGuard)
